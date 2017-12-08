@@ -1,7 +1,18 @@
 const express = require('express');
 const exphbs  = require('express-handlebars');
+const mongoose = require('mongoose');
 
 const app = express();
+
+// Map global promise (gets rid of warning "DeprecationWarning: Mongoose: mpromise (mongoose's default promise library) is deprecated, plug in your own promise library instead: http://mongoosejs.com/docs/promises.html")
+mongoose.Promise = global.Promise;
+
+// Connect to mongoose
+mongoose.connect('mongodb://localhost/ideasnoter-dev', {
+  useMongoClient: true
+})
+  .then(() => console.log('MongoDB Connected...'))
+  .catch(err => console.log(err));
 
 // Handlebars Middleware
 app.engine('handlebars', exphbs({
