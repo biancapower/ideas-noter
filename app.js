@@ -95,7 +95,7 @@ app.get('/ideas/edit/:id', (req, res) => {
     });
 });
 
-// Process Idea Form
+// Process Idea Add Form
 app.post('/ideas', (req, res) => {
 
   // server-side validation
@@ -123,6 +123,7 @@ app.post('/ideas', (req, res) => {
     new Idea(newUser)
       .save()
       .then( idea => {
+        req.flash('success_message', 'Idea added');
         res.redirect('/ideas');
       })
   }
@@ -140,6 +141,7 @@ app.put('/ideas/:id', (req, res) => {
 
       idea.save()
         .then(idea => {
+          req.flash('success_message', 'Idea updated');
           res.redirect('/ideas');
         })
     });
@@ -149,6 +151,7 @@ app.put('/ideas/:id', (req, res) => {
 app.delete('/ideas/:id', (req, res) => {
   Idea.remove({_id: req.params.id})
     .then(() => {
+      req.flash('success_message', 'Idea deleted');
       res.redirect('/ideas');
     })
 });
