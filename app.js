@@ -45,6 +45,14 @@ app.use(session({
 // Flash Middleware
 app.use(flash());
 
+// Global Variables for Flash Messages
+app.use(function(req, res, next) {
+  res.locals.success_message = req.flash('success_message');
+  res.locals.error_message = req.flash('error_message');
+  res.locals.error = req.flash('error'); // for use with passport
+  next();
+});
+
 // Index Route
 app.get('/', (req, res) => {
   const title = "Ideas Noter"
