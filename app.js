@@ -156,6 +156,16 @@ app.delete('/ideas/:id', (req, res) => {
     })
 });
 
+// User Login Route
+app.get('/users/login', (req, res) => {
+  res.send('login')
+});
+
+// User Signup Route
+app.get('/users/signup', (req, res) => {
+  res.send('signup')
+});
+
 const port = 5000;
 
 app.listen(port, () => {
