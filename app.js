@@ -5,6 +5,7 @@ const methodOverride = require('method-override');
 const flash = require('connect-flash');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const passport = require('passport');
 const mongoose = require('mongoose');
 
 const app = express();
@@ -12,6 +13,9 @@ const app = express();
 // Load Routes
 const ideas = require('./routes/ideas')
 const users = require('./routes/users')
+
+// Passport Config
+require('./config/passport')(passport);
 
 // Map global promise (gets rid of warning "DeprecationWarning: Mongoose: mpromise (mongoose's default promise library) is deprecated, plug in your own promise library instead: http://mongoosejs.com/docs/promises.html")
 mongoose.Promise = global.Promise;
