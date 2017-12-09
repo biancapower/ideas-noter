@@ -8,6 +8,10 @@ const mongoose = require('mongoose');
 
 const app = express();
 
+// Load Routes
+const ideas = require('./routes/ideas')
+const users = require('./routes/users')
+
 // Map global promise (gets rid of warning "DeprecationWarning: Mongoose: mpromise (mongoose's default promise library) is deprecated, plug in your own promise library instead: http://mongoosejs.com/docs/promises.html")
 mongoose.Promise = global.Promise;
 
@@ -17,10 +21,6 @@ mongoose.connect('mongodb://localhost/ideasnoter-dev', {
 })
   .then(() => console.log('MongoDB Connected...'))
   .catch(err => console.log(err));
-
-// Load Idea Model
-require('./models/Idea');
-const Idea = mongoose.model('ideas');
 
 // Handlebars Middleware
 app.engine('handlebars', exphbs({
@@ -66,105 +66,9 @@ app.get('/about', (req, res) => {
   res.render('about');
 });
 
-// Idea Index page
-app.get('/ideas', (req, res) => {
-  Idea.find({})
-    .sort({date: 'desc'})
-    .then(ideas => {
-      res.render('ideas/index', {
-        ideas:ideas
-      });
-    })
-
-});
-
-// Add Idea Form
-app.get('/ideas/add', (req, res) => {
-  res.render('ideas/add');
-});
-
-// Edit Idea Form
-app.get('/ideas/edit/:id', (req, res) => {
-  Idea.findOne({
-    _id: req.params.id
-  })
-    .then(idea => {
-      res.render('ideas/edit', {
-        idea: idea
-      });
-    });
-});
-
-// Process Idea Add Form
-app.post('/ideas', (req, res) => {
-
-  // server-side validation
-  let errors = [];
-
-  if(!req.body.title){
-    errors.push({text: 'Please add a title'});
-  }
-
-  if(!req.body.details){
-    errors.push({text: 'Please add some details'});
-  }
-
-  if(errors.length > 0){
-    res.render('ideas/add', {
-      errors: errors,
-      title: req.body.title,
-      details: req.body.details
-    });
-  } else {
-    const newUser = {
-      title: req.body.title,
-      details: req.body.details
-    }
-    new Idea(newUser)
-      .save()
-      .then( idea => {
-        req.flash('success_message', 'Idea added');
-        res.redirect('/ideas');
-      })
-  }
-});
-
-// Edit Idea Form Process
-app.put('/ideas/:id', (req, res) => {
-  Idea.findOne({
-    _id: req.params.id
-  })
-    .then(idea => {
-      // update values
-      idea.title = req.body.title;
-      idea.details = req.body.details;
-
-      idea.save()
-        .then(idea => {
-          req.flash('success_message', 'Idea updated');
-          res.redirect('/ideas');
-        })
-    });
-});
-
-// Delete Idea
-app.delete('/ideas/:id', (req, res) => {
-  Idea.remove({_id: req.params.id})
-    .then(() => {
-      req.flash('success_message', 'Idea deleted');
-      res.redirect('/ideas');
-    })
-});
-
-// User Login Route
-app.get('/users/login', (req, res) => {
-  res.send('login')
-});
-
-// User Signup Route
-app.get('/users/signup', (req, res) => {
-  res.send('signup')
-});
+// Use Routes
+app.use('/ideas', ideas); // anything that uses /ideas will go to the ideas routes file
+app.use('/users', users);
 
 const port = 5000;
 
