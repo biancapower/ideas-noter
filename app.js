@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path'); // core node module, doesn't require installation
 const exphbs  = require('express-handlebars');
 const methodOverride = require('method-override');
 const flash = require('connect-flash');
@@ -31,6 +32,9 @@ app.set('view engine', 'handlebars');
 // Body Parser Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+// Static folder
+app.use(express.static(path.join(__dirname, 'public'))); // sets express static folder to 'public' folder
 
 // Method Override Middleware
 app.use(methodOverride('_method'));
