@@ -57,11 +57,12 @@ app.use(passport.session());
 // Flash Middleware
 app.use(flash());
 
-// Global Variables for Flash Messages
+// Global Variables
 app.use(function(req, res, next) {
-  res.locals.success_message = req.flash('success_message');
-  res.locals.error_message = req.flash('error_message');
+  res.locals.success_message = req.flash('success_message'); // for Flash Messages
+  res.locals.error_message = req.flash('error_message'); // for Flash Messages
   res.locals.error = req.flash('error'); // for use with passport
+  res.locals.user = req.user || null; // to check if there is a user logged in
   next();
 });
 
