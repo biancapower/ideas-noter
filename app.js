@@ -50,6 +50,10 @@ app.use(session({
   saveUninitialized: true,
 }));
 
+// Passport Middleware (MUST be after 'Express Sessions Middleware')
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Flash Middleware
 app.use(flash());
 
