@@ -17,11 +17,14 @@ const users = require('./routes/users')
 // Passport Config
 require('./config/passport')(passport);
 
+// DB Config
+const db = require('./config/database')
+
 // Map global promise (gets rid of warning "DeprecationWarning: Mongoose: mpromise (mongoose's default promise library) is deprecated, plug in your own promise library instead: http://mongoosejs.com/docs/promises.html")
 mongoose.Promise = global.Promise;
 
 // Connect to mongoose
-mongoose.connect('mongodb://localhost/ideasnoter-dev', {
+mongoose.connect(db.mongoURI, {
   useMongoClient: true
 })
   .then(() => console.log('MongoDB Connected...'))
@@ -83,7 +86,7 @@ app.get('/about', (req, res) => {
 app.use('/ideas', ideas); // anything that uses /ideas will go to the ideas routes file
 app.use('/users', users);
 
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 app.listen(port, () => {
   console.log(`Server started on port ${port}`)
